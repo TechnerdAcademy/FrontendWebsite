@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "reactstrap";
+import ReactPlayer from "react-player";
 
 import chooseImg from "../../assests/images/why-choose-us.png";
 import "./choose-us.css";
 
-import ReactPlayer from "react-player";
-
 const ChooseUs = () => {
   const [showVideo, setShowVideo] = useState(false);
+
   return (
     <section>
       <Container>
@@ -16,13 +16,7 @@ const ChooseUs = () => {
             <div className="choose__content">
               <h2>Why Choose Us</h2>
               <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Incidunt mollitia nostrum harum eos praesentium odit a sed quod
-                aut fugit. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Reprehenderit omnis, culpa eligendi inventore perspiciatis
-                minus. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Dolores cupiditate facilis provident quidem accusamus impedit
-                tenetur laboriosam debitis nisi eius!
+                At Technerds, we pride ourselves on delivering excellence in everything we do. Our experienced team, commitment to quality, customer-centric approach, and innovative solutions set us apart. Choosing us means choosing a partner dedicated to your success.
               </p>
             </div>
           </Col>
@@ -37,14 +31,16 @@ const ChooseUs = () => {
                   height="350px"
                 />
               ) : (
-                <img src={chooseImg} alt="" className="w-100" />
+                <img src={chooseImg} alt="Why Choose Us" className="w-100" />
               )}
 
               {!showVideo && (
                 <span className="play__icon">
                   <i
-                    class="ri-play-circle-line"
-                    onClick={() => setShowVideo(!showVideo)}
+                    className="ri-play-circle-line"
+                    onClick={() => setShowVideo(true)}
+                    aria-label="Play Video"
+                    role="button"
                   ></i>
                 </span>
               )}

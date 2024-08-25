@@ -20,45 +20,39 @@ const AboutUs = () => {
             <div className="about__content">
               <h2>About Us</h2>
               <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Excepturi cupiditate animi deserunt libero nesciunt corporis
-                explicabo nobis ex quo molestiae!
+                Welcome to Technerds, your go-to platform for all things e-learning. Our mission is to make education accessible and enjoyable for everyone, regardless of their location or background. We offer a wide range of courses designed to help you achieve your educational and professional goals.
               </p>
 
               <div className="about__counter">
                 <div className=" d-flex gap-5 align-items-center">
-                  <div className="single__counter">
+                <div className="single__counter">
                     <span className="counter">
-                      <CountUp start={0} end={25} duration={2} suffix="K" />
+                      <CountUp start={0} end={500} duration={2} suffix="+" />
                     </span>
-
-                    <p className="counter__title">Completed Projects</p>
+                    <p className="counter__title">Courses Offered</p>
                   </div>
 
                   <div className="single__counter">
                     <span className="counter">
-                      <CountUp start={0} end={12} duration={2} suffix="M" />
+                      <CountUp start={0} end={20000} duration={2} suffix="+" />
                     </span>
-
-                    <p className="counter__title">Patient Around World</p>
+                    <p className="counter__title">Students Enrolled</p>
                   </div>
                 </div>
 
-                <div className=" d-flex gap-5 align-items-center">
+                <div className="d-flex gap-5 align-items-center">
                   <div className="single__counter">
                     <span className="counter">
-                      <CountUp start={0} end={95} duration={2} suffix="M" />
+                      <CountUp start={0} end={100} duration={2} suffix="%" />
                     </span>
-
-                    <p className="counter__title">Ideas Raised Funds</p>
+                    <p className="counter__title">Student Satisfaction</p>
                   </div>
 
                   <div className="single__counter">
                     <span className="counter">
-                      <CountUp start={0} end={5} duration={2} suffix="K" />
+                      <CountUp start={0} end={20} duration={2} suffix="+" />
                     </span>
-
-                    <p className="counter__title">Categories Served</p>
+                    <p className="counter__title">Expert Instructors</p>
                   </div>
                 </div>
               </div>
