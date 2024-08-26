@@ -1,36 +1,77 @@
-import React, { Fragment, Suspense } from "react";
-import { BrowserRouter } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import loadable from "@loadable/component";
-import Loader from "./components/Loader"; // Updated path
-import Header from "./components/Header/Header"; // Updated path
-import HeroSection from "./components/Hero-Section/HeroSection"; // Updated path
-import CompanySection from "./components/Company-section/Company"; // Updated path
-import AboutUs from "./components/About-us/AboutUs"; // Updated path
-import ChooseUs from "./components/Choose-us/ChooseUs"; // Updated path
-import Features from "./components/Feature-section/Features"; // Updated path
-import FreeCourse from "./components/Free-course-section/FreeCourse"; // Updated path
-import Testimonials from "./components/Testimonial/Testimonials"; // Updated path
-import Newsletter from "./components/Newsletter/Newsletter"; // Updated path
-import Footer from "./components/Footer/Footer"; // Updated path
+import Loader from "./components/Loader";
+
+// Loadable components
+const Header = loadable(() => import("./components/Header/Header"), {
+  fallback: <Loader />,
+});
+const HeroSection = loadable(() => import("./components/Hero-Section/HeroSection"), {
+  fallback: <Loader />,
+});
+const CompanySection = loadable(() => import("./components/Company-section/Company"), {
+  fallback: <Loader />,
+});
+const AboutUs = loadable(() => import("./components/About-us/AboutUs"), {
+  fallback: <Loader />,
+});
+const ChooseUs = loadable(() => import("./components/Choose-us/ChooseUs"), {
+  fallback: <Loader />,
+});
+const Features = loadable(() => import("./components/Feature-section/Features"), {
+  fallback: <Loader />,
+});
+const FreeCourse = loadable(() => import("./components/Free-course-section/FreeCourse"), {
+  fallback: <Loader />,
+});
+const Testimonials = loadable(() => import("./components/Testimonial/Testimonials"), {
+  fallback: <Loader />,
+});
+const Newsletter = loadable(() => import("./components/Newsletter/Newsletter"), {
+  fallback: <Loader />,
+});
+const Footer = loadable(() => import("./components/Footer/Footer"), {
+  fallback: <Loader />,
+});
+const LoginModal = loadable(() => import("./components/Login/index.js"), {
+  fallback: <Loader />,
+});
+
+// Home component that includes all sections
+const Home = () => (
+  <>
+    <HeroSection />
+    <CompanySection />
+    <AboutUs />
+    <ChooseUs />
+    <Features />
+    <FreeCourse />
+    <Testimonials />
+  </>
+);
 
 function App() {
   return (
-    <BrowserRouter>
-      <Fragment>
-        <Suspense fallback={<Loader />}>
-          <Header />
-          <HeroSection />
-          <CompanySection />
-          <AboutUs />
-          <ChooseUs />
-          <Features />
-          <FreeCourse />
-          <Testimonials />
-          {/* <Newsletter /> */}
-          <Footer />
-        </Suspense>
-      </Fragment>
-    </BrowserRouter>
+    <Router>
+      <Header />
+      <Routes>
+        {/* Home Route - displays all sections */}
+        <Route path="/" element={<Home />} />
+        
+        {/* Individual Routes for each section */}
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/choose-us" element={<ChooseUs />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/free-course" element={<FreeCourse />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/newsletter" element={<Newsletter />} />
+        
+        {/* Route for Login */}
+        <Route path="/login" element={<LoginModal />} />
+      </Routes>
+      <Footer />
+    </Router>
   );
 }
 
