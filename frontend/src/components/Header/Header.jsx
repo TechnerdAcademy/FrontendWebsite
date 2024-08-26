@@ -1,40 +1,28 @@
 import React, { useRef, useState } from "react";
 import { Container } from "reactstrap";
-import LoginModal from "./LoginModal"; 
+import { useNavigate, Link } from "react-router-dom"; // Import Link
 import "./header.css";
 
 const navLinks = [
-  {
-    display: "Home",
-    url: "#",
-  },
-  {
-    display: "About",
-    url: "#",
-  },
-  {
-    display: "Courses",
-    url: "#",
-  },
-  {
-    display: "Login",
-    url: "#",
-  },
+  { display: "Home", url: "/" },
+  { display: "About", url: "/about-us" },
+  { display: "Courses", url: "/free-course" },
+  { display: "Login", url: "/login" }, // Link to /login
+  { display: "Why Choose Us", url: "/choose-us" }
 ];
 
 const Header = () => {
   const menuRef = useRef();
-  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const menuToggle = () => menuRef.current.classList.toggle("active__menu");
-  const toggleModal = () => setModalOpen(!modalOpen);
 
   return (
     <header className="header">
       <Container>
         <div className="navigation d-flex align-items-center justify-content-between">
           <div className="logo">
-            <h2 className=" d-flex align-items-center gap-1">
+            <h2 className="d-flex align-items-center gap-1">
               <i className="ri-pantone-line"></i> Technerds.
             </h2>
           </div>
@@ -44,12 +32,9 @@ const Header = () => {
               <ul className="nav__list">
                 {navLinks.map((item, index) => (
                   <li key={index} className="nav__item">
-                    <a
-                      href={item.url}
-                      onClick={item.display === "Login" ? toggleModal : null}
-                    >
+                    <Link to={item.url}>
                       {item.display}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -69,7 +54,6 @@ const Header = () => {
           </div>
         </div>
       </Container>
-      <LoginModal isOpen={modalOpen} toggle={toggleModal} />
     </header>
   );
 };
