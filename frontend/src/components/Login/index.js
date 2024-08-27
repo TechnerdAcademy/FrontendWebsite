@@ -15,28 +15,59 @@ import {
   Spinner,
 } from "reactstrap";
 import axios from "axios";
-import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaUser, FaMobileAlt } from 'react-icons/fa';
+import { AiOutlineMail, AiOutlineLock, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("1");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  const [emailError, setEmailError] = useState("");
+  const [mobileError, setMobileError] = useState("");
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateMobile = (mobile) => {
+    const mobileRegex = /^[0-9]{10}$/; // Assuming a 10-digit mobile number
+    return mobileRegex.test(mobile);
+  };
+
   const handleLogin = async () => {
     try {
       setLoading(true);
-      const response = await axios.post("/api/login", { email, password });
+      if (!validateEmail(email)) {
+        setEmailError("Invalid email format");
+        return;
+      }
+      setEmailError("");
+      const response = await axios.post("http://localhost:4001/v1/auth/login", { email, password });
       console.log("Login successful", response.data);
+      const { tokens } = response.data;
+      localStorage.setItem("users", JSON.stringify({ email, password }));
+      localStorage.setItem("accessToken", tokens.access.token);
+      localStorage.setItem("accessTokenExpires", tokens.access.expires);
+      localStorage.setItem("refreshToken", tokens.refresh.token);
+      localStorage.setItem("refreshTokenExpires", tokens.refresh.expires);
+      toast.success("Login successful!");
     } catch (error) {
       console.error("Login error", error);
+      toast.error("Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -45,10 +76,32 @@ const LoginPage = () => {
   const handleRegister = async () => {
     try {
       setLoading(true);
-      const response = await axios.post("/api/register", { email, password });
+      if (!validateEmail(email)) {
+        setEmailError("Invalid email format");
+        return;
+      }
+      if (!validateMobile(mobile)) {
+        setMobileError("Invalid mobile number");
+        return;
+      }
+      setEmailError("");
+      setMobileError("");
+
+      const response = await axios.post("http://localhost:4001/v1/auth/register", {
+        name,
+        email,
+        mobile,
+        password,
+      });
       console.log("Registration successful", response.data);
+      const { tokens } = response.data;
+      localStorage.setItem("userData", JSON.stringify({ name, email, mobile, password }));
+      localStorage.setItem("token", tokens.access.token);
+      localStorage.setItem("rToken", tokens.refresh.token);
+      toast.success("Registration successful!");
     } catch (error) {
       console.error("Registration error", error);
+      toast.error("Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -57,10 +110,17 @@ const LoginPage = () => {
   const handleForgotPassword = async () => {
     try {
       setLoading(true);
+      if (!validateEmail(email)) {
+        setEmailError("Invalid email format");
+        return;
+      }
+      setEmailError("");
       const response = await axios.post("/api/forgot-password", { email });
       console.log("Password reset email sent", response.data);
+      toast.success("Password reset email sent!");
     } catch (error) {
       console.error("Forgot password error", error);
+      toast.error("Failed to send password reset email.");
     } finally {
       setLoading(false);
     }
@@ -68,6 +128,21 @@ const LoginPage = () => {
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+  
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
+  const handleCancel = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setMobile("");
+    setName("");
+    setEmailError("");
+    setMobileError("");
+    setLoading(false);
   };
 
   const pageStyle = {
@@ -87,9 +162,9 @@ const LoginPage = () => {
   };
 
   const iconStyle = {
-    fontSize: '2.5rem', // Adjust icon size as needed
+    fontSize: '2.5rem', 
     marginRight: '10px',
-    color: '#17bf9e', // Updated icon color
+    color: '#17bf9e', 
   };
 
   const textStyle = {
@@ -145,8 +220,8 @@ const LoginPage = () => {
 
   const buttonStyle = {
     borderRadius: '50px',
-    padding: '0.75rem 2rem',
-    fontSize: '1rem',
+    padding: '0.5rem 1rem', // Decreased padding
+    fontSize: '0.8rem', // Decreased font size
     fontWeight: '600',
     borderColor: '#007bff',
     color: '#fff',
@@ -175,11 +250,12 @@ const LoginPage = () => {
 
   const eyeIconStyle = {
     cursor: 'pointer',
-    color: '#343a40', // Dark color for eye icons
+    color: '#343a40', 
   };
 
   return (
     <div style={pageStyle}>
+      <ToastContainer />
       <div style={headerStyle}>
         <i className="ri-pantone-line" style={iconStyle}></i>
         <span style={textStyle}>Technerds</span>
@@ -211,7 +287,7 @@ const LoginPage = () => {
             </NavLink>
           </NavItem>
         </Nav>
-        <TabContent activeTab={activeTab} className="mt-4">
+        <TabContent activeTab={activeTab}>
           <TabPane tabId="1">
             <Form>
               <FormGroup style={formGroupStyle}>
@@ -219,9 +295,7 @@ const LoginPage = () => {
                   Email
                 </Label>
                 <InputGroup style={inputGroupStyle}>
-                  <InputGroupText>
-                    <AiOutlineMail size={20} />
-                  </InputGroupText>
+                  <InputGroupText><AiOutlineMail /></InputGroupText>
                   <Input
                     type="email"
                     name="email"
@@ -232,15 +306,14 @@ const LoginPage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </InputGroup>
+                {emailError && <div style={{ color: "red", marginTop: "0.5rem" }}>{emailError}</div>}
               </FormGroup>
               <FormGroup style={formGroupStyle}>
                 <Label for="signInPassword" style={labelStyle}>
                   Password
                 </Label>
                 <InputGroup style={inputGroupStyle}>
-                  <InputGroupText>
-                    <AiOutlineLock size={20} />
-                  </InputGroupText>
+                  <InputGroupText><AiOutlineLock /></InputGroupText>
                   <Input
                     type={passwordVisible ? "text" : "password"}
                     name="password"
@@ -251,32 +324,23 @@ const LoginPage = () => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputGroupText style={eyeIconStyle} onClick={togglePasswordVisibility}>
-                    {passwordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                   </InputGroupText>
                 </InputGroup>
               </FormGroup>
               <div style={buttonContainerStyle}>
                 <Button
+                  color="primary"
                   style={buttonStyle}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = buttonStyleHover.backgroundColor)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = buttonStyle.backgroundColor)
-                  }
                   onClick={handleLogin}
+                  disabled={loading}
                 >
-                  {loading ? <Spinner size="sm" color="light" /> : "Sign In"}
+                  {loading ? <Spinner size="sm" /> : "Sign In"}
                 </Button>
                 <Button
+                  color="secondary"
                   style={cancelButtonStyle}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = '#c82333')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = cancelButtonStyle.backgroundColor)
-                  }
-                  onClick={() => setActiveTab("2")}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>
@@ -286,43 +350,75 @@ const LoginPage = () => {
           <TabPane tabId="2">
             <Form>
               <FormGroup style={formGroupStyle}>
-                <Label for="registerEmail" style={labelStyle}>
+                <Label for="signUpName" style={labelStyle}>
+                  Name
+                </Label>
+                <InputGroup style={inputGroupStyle}>
+                  <InputGroupText><FaUser /></InputGroupText>
+                  <Input
+                    type="text"
+                    name="name"
+                    id="signUpName"
+                    placeholder="Enter your name"
+                    style={inputStyle}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup style={formGroupStyle}>
+                <Label for="signUpEmail" style={labelStyle}>
                   Email
                 </Label>
                 <InputGroup style={inputGroupStyle}>
-                  <InputGroupText>
-                    <AiOutlineMail size={20} />
-                  </InputGroupText>
+                  <InputGroupText><AiOutlineMail /></InputGroupText>
                   <Input
                     type="email"
                     name="email"
-                    id="registerEmail"
+                    id="signUpEmail"
                     placeholder="Enter your email"
                     style={inputStyle}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </InputGroup>
+                {emailError && <div style={{ color: "red", marginTop: "0.5rem" }}>{emailError}</div>}
               </FormGroup>
               <FormGroup style={formGroupStyle}>
-                <Label for="registerPassword" style={labelStyle}>
+                <Label for="signUpMobile" style={labelStyle}>
+                  Mobile
+                </Label>
+                <InputGroup style={inputGroupStyle}>
+                  <InputGroupText><FaMobileAlt /></InputGroupText>
+                  <Input
+                    type="text"
+                    name="mobile"
+                    id="signUpMobile"
+                    placeholder="Enter your mobile number"
+                    style={inputStyle}
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                  />
+                </InputGroup>
+                {mobileError && <div style={{ color: "red", marginTop: "0.5rem" }}>{mobileError}</div>}
+              </FormGroup>
+              <FormGroup style={formGroupStyle}>
+                <Label for="signUpPassword" style={labelStyle}>
                   Password
                 </Label>
                 <InputGroup style={inputGroupStyle}>
-                  <InputGroupText>
-                    <AiOutlineLock size={20} />
-                  </InputGroupText>
+                  <InputGroupText><AiOutlineLock /></InputGroupText>
                   <Input
                     type={passwordVisible ? "text" : "password"}
                     name="password"
-                    id="registerPassword"
+                    id="signUpPassword"
                     placeholder="Enter your password"
                     style={inputStyle}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputGroupText style={eyeIconStyle} onClick={togglePasswordVisibility}>
-                    {passwordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                   </InputGroupText>
                 </InputGroup>
               </FormGroup>
@@ -330,38 +426,35 @@ const LoginPage = () => {
                 <Label for="confirmPassword" style={labelStyle}>
                   Confirm Password
                 </Label>
-                <Input
-                  type={passwordVisible ? "text" : "password"}
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  placeholder="Confirm your password"
-                  style={inputStyle}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                <InputGroup style={inputGroupStyle}>
+                  <InputGroupText><AiOutlineLock /></InputGroupText>
+                  <Input
+                    type={confirmPasswordVisible ? "text" : "password"}
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    style={inputStyle}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <InputGroupText style={eyeIconStyle} onClick={toggleConfirmPasswordVisibility}>
+                    {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                  </InputGroupText>
+                </InputGroup>
               </FormGroup>
               <div style={buttonContainerStyle}>
                 <Button
+                  color="primary"
                   style={buttonStyle}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = buttonStyleHover.backgroundColor)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = buttonStyle.backgroundColor)
-                  }
                   onClick={handleRegister}
+                  disabled={loading}
                 >
-                  {loading ? <Spinner size="sm" color="light" /> : "Sign Up"}
+                  {loading ? <Spinner size="sm" /> : "Sign Up"}
                 </Button>
                 <Button
+                  color="secondary"
                   style={cancelButtonStyle}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = '#c82333')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = cancelButtonStyle.backgroundColor)
-                  }
-                  onClick={() => setActiveTab("1")}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>
@@ -371,46 +464,36 @@ const LoginPage = () => {
           <TabPane tabId="3">
             <Form>
               <FormGroup style={formGroupStyle}>
-                <Label for="forgotEmail" style={labelStyle}>
+                <Label for="forgotPasswordEmail" style={labelStyle}>
                   Email
                 </Label>
                 <InputGroup style={inputGroupStyle}>
-                  <InputGroupText>
-                    <AiOutlineMail size={20} />
-                  </InputGroupText>
+                  <InputGroupText><AiOutlineMail /></InputGroupText>
                   <Input
                     type="email"
                     name="email"
-                    id="forgotEmail"
+                    id="forgotPasswordEmail"
                     placeholder="Enter your email"
                     style={inputStyle}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </InputGroup>
+                {emailError && <div style={{ color: "red", marginTop: "0.5rem" }}>{emailError}</div>}
               </FormGroup>
               <div style={buttonContainerStyle}>
                 <Button
+                  color="primary"
                   style={buttonStyle}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = buttonStyleHover.backgroundColor)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = buttonStyle.backgroundColor)
-                  }
                   onClick={handleForgotPassword}
+                  disabled={loading}
                 >
-                  {loading ? <Spinner size="sm" color="light" /> : "Send Reset Link"}
+                  {loading ? <Spinner size="sm" /> : "Reset Password"}
                 </Button>
                 <Button
+                  color="secondary"
                   style={cancelButtonStyle}
-                  onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = '#c82333')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = cancelButtonStyle.backgroundColor)
-                  }
-                  onClick={() => setActiveTab("1")}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>
