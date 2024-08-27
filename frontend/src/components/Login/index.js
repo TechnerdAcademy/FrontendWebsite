@@ -19,6 +19,8 @@ import { FaEye, FaEyeSlash, FaUser, FaMobileAlt } from 'react-icons/fa';
 import { AiOutlineMail, AiOutlineLock, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -33,6 +35,9 @@ const LoginPage = () => {
 
   const [emailError, setEmailError] = useState("");
   const [mobileError, setMobileError] = useState("");
+
+  const navigate = useNavigate();
+
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -65,6 +70,7 @@ const LoginPage = () => {
       localStorage.setItem("refreshToken", tokens.refresh.token);
       localStorage.setItem("refreshTokenExpires", tokens.refresh.expires);
       toast.success("Login successful!");
+      navigate('/dashboard')
     } catch (error) {
       console.error("Login error", error);
       toast.error("Login failed. Please check your credentials.");

@@ -1,3 +1,4 @@
+// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import loadable from "@loadable/component";
@@ -29,10 +30,15 @@ const Newsletter = loadable(() => import("./components/Newsletter/Newsletter"), 
 const LoginModal = loadable(() => import("./components/Login/index.js"), {
   fallback: <Loader />,
 });
-const Dashboard = loadable(() => import("./components/Dashboard/dashboard.js"), {
+const Dashboard = loadable(() => import("./components/Dashboard/index.js"), {
   fallback: <Loader />,
 });
-
+const Courses = loadable(() => import("./components/Dashboard/Courses.js"), {
+  fallback: <Loader />,
+});
+const Profile = loadable(() => import("./components/Dashboard/Profile.js"), {
+  fallback: <Loader />,
+});
 
 const LayoutWithHeaderFooter = ({ children }) => (
   <>
@@ -46,7 +52,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Home Layout Route - loads full HomeLayout */}
+        {/* Home Layout Route */}
         <Route path="/" element={<HomeLayout />} />
       
         <Route path="/about-us" element={<LayoutWithHeaderFooter><AboutUs /></LayoutWithHeaderFooter>} />
@@ -56,10 +62,12 @@ function App() {
         <Route path="/testimonials" element={<LayoutWithHeaderFooter><Testimonials /></LayoutWithHeaderFooter>} />
         <Route path="/newsletter" element={<LayoutWithHeaderFooter><Newsletter /></LayoutWithHeaderFooter>} />
         <Route path="/login" element={<LayoutWithHeaderFooter><LoginModal /></LayoutWithHeaderFooter>} />
-
-       
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+      
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />  {/* Default dashboard route */}
+          <Route path="courses" element={<Courses courses={[]} />} /> {/* Nested route for courses */}
+          <Route path="profile" element={<Profile />} /> {/* Nested route for profile */}
+          {/* Add other routes as needed */}
         </Route>
       </Routes>
     </Router>
