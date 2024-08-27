@@ -1,19 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Container } from "reactstrap";
-import { useNavigate, Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom"; // Import Link
 import "./header.css";
 
 const navLinks = [
-  { display: "Home", url: "#" },
-  { display: "Cart", url: "#" },
-  { display: "Courses", url: "#" },
-  { display: "Profile", url: "#" },
-  { display: "My courses", url: "#" }
+  { display: "Home", url: "/" },
+  { display: "Cart", url: "#" }, // Update if you have a Cart page
+  { display: "Courses", url: "/dashboard/courses" }, // Update to match dashboard route
+  { display: "Profile", url: "/dashboard/profile" }, // Update if you have a Profile page
+  { display: "My courses", url: "#" } // Update if you have a My Courses page
 ];
 
 const Header = () => {
   const menuRef = useRef();
-  const navigate = useNavigate(); 
 
   const menuToggle = () => menuRef.current.classList.toggle("active__menu");
 
