@@ -2,17 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import loadable from "@loadable/component";
 import Loader from "./components/Loader";
+import HomeLayout from "./components/HomeLyout.js";
+import DashboardLayout from "./components/DashBoardLayout.js";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 
 // Loadable components
-const Header = loadable(() => import("./components/Header/Header"), {
-  fallback: <Loader />,
-});
-const HeroSection = loadable(() => import("./components/Hero-Section/HeroSection"), {
-  fallback: <Loader />,
-});
-const CompanySection = loadable(() => import("./components/Company-section/Company"), {
-  fallback: <Loader />,
-});
 const AboutUs = loadable(() => import("./components/About-us/AboutUs"), {
   fallback: <Loader />,
 });
@@ -31,46 +26,42 @@ const Testimonials = loadable(() => import("./components/Testimonial/Testimonial
 const Newsletter = loadable(() => import("./components/Newsletter/Newsletter"), {
   fallback: <Loader />,
 });
-const Footer = loadable(() => import("./components/Footer/Footer"), {
-  fallback: <Loader />,
-});
 const LoginModal = loadable(() => import("./components/Login/index.js"), {
   fallback: <Loader />,
 });
+const Dashboard = loadable(() => import("./components/Dashboard/dashboard.js"), {
+  fallback: <Loader />,
+});
 
-// Home component that includes all sections
-const Home = () => (
+
+const LayoutWithHeaderFooter = ({ children }) => (
   <>
-    <HeroSection />
-    <CompanySection />
-    <AboutUs />
-    <ChooseUs />
-    <Features />
-    <FreeCourse />
-    <Testimonials />
+    <Header />
+    <main>{children}</main>
+    <Footer />
   </>
 );
 
 function App() {
   return (
     <Router>
-      <Header />
       <Routes>
-        {/* Home Route - displays all sections */}
-        <Route path="/" element={<Home />} />
-        
-        {/* Individual Routes for each section */}
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/choose-us" element={<ChooseUs />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/free-course" element={<FreeCourse />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/newsletter" element={<Newsletter />} />
-        
-        {/* Route for Login */}
-        <Route path="/login" element={<LoginModal />} />
+        {/* Home Layout Route - loads full HomeLayout */}
+        <Route path="/" element={<HomeLayout />} />
+      
+        <Route path="/about-us" element={<LayoutWithHeaderFooter><AboutUs /></LayoutWithHeaderFooter>} />
+        <Route path="/choose-us" element={<LayoutWithHeaderFooter><ChooseUs /></LayoutWithHeaderFooter>} />
+        <Route path="/features" element={<LayoutWithHeaderFooter><Features /></LayoutWithHeaderFooter>} />
+        <Route path="/free-course" element={<LayoutWithHeaderFooter><FreeCourse /></LayoutWithHeaderFooter>} />
+        <Route path="/testimonials" element={<LayoutWithHeaderFooter><Testimonials /></LayoutWithHeaderFooter>} />
+        <Route path="/newsletter" element={<LayoutWithHeaderFooter><Newsletter /></LayoutWithHeaderFooter>} />
+        <Route path="/login" element={<LayoutWithHeaderFooter><LoginModal /></LayoutWithHeaderFooter>} />
+
+       
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
-      <Footer />
     </Router>
   );
 }
