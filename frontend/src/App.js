@@ -39,6 +39,9 @@ const Courses = loadable(() => import("./components/Dashboard/Courses.js"), {
 const Profile = loadable(() => import("./components/Dashboard/Profile.js"), {
   fallback: <Loader />,
 });
+const CourseDescription = loadable(() => import("./components/Dashboard/coursedicription"),{
+  fallback: <Loader />
+})
 
 const LayoutWithHeaderFooter = ({ children }) => (
   <>
@@ -67,6 +70,7 @@ function App() {
           <Route index element={<Dashboard />} />  {/* Default dashboard route */}
           <Route path="courses" element={<Courses courses={[]} />} /> {/* Nested route for courses */}
           <Route path="profile" element={<Profile />} /> {/* Nested route for profile */}
+          <Route path="course-description" element={<CourseDescription />} /> {/* Nested route for course description */}
           {/* Add other routes as needed */}
         </Route>
       </Routes>

@@ -1,134 +1,166 @@
-// components/Dashboard/Courses.js
-import React from "react";
-import { Card, CardContent, CardActions, Typography, Button, Grid, CardMedia, Box } from "@mui/material";
+import React from 'react';
+import { Grid, Card, CardContent, Typography, Avatar, Box, Button, Chip } from '@mui/material';
+import heroimg from '../../assests/images/hero-img1.png';
+import img2 from '../../assests/images/branding.png';
 
-const Courses = () => {
-  // Extended list of courses with additional details
+const CourseList = () => {
   const courses = [
     {
-      title: "Introduction to React",
-      price: "$99.99",
-      discount: "20% Off",
-      enrollments: 150,
-      image: "https://d1ymz67w5raq8g.cloudfront.net/Pictures/1024x536/P/web/n/z/b/onlinecourses_shutterstock_490891228_2000px_728945.jpg" // Placeholder image URL
+      _id: "66cde34f89c32f07e4f99aee",
+      title: "Advanced Web Development",
+      subtitle: "Take your web development skills to the next level.",
+      price: 150,
+      discountedPrice: 120,
+      isFree: false,
+      imageUrl: heroimg,
+      freeCourses: [
+        { title: "Introduction to HTML", _id: "66cde34f89c32f07e4f99aef" },
+        { title: "CSS Fundamentals", _id: "66cde34f89c32f07e4f99af0" }
+      ]
     },
     {
-      title: "Advanced JavaScript",
-      price: "$149.99",
-      discount: "15% Off",
-      enrollments: 120,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDJ7_h9JUZzgiB6eOAgzSVrcxB6_9ZuiIzho5v6kqQ9iE80OstnPt9jchXgOKhhRTwmk&usqp=CAU" // Placeholder image URL
+      _id: "66cde34f89c32f07e4f99af1",
+      title: "JavaScript Mastery",
+      subtitle: heroimg,
+      price: 200,
+      discountedPrice: 150,
+      isFree: false,
+      imageUrl: img2,
+      freeCourses: [
+        { title: "Introduction to JavaScript", _id: "66cde34f89c32f07e4f99af2" },
+        { title: "Advanced JavaScript", _id: "66cde34f89c32f07e4f99af3" }
+      ]
     },
     {
-      title: "Web Development Bootcamp",
-      price: "$299.99",
-      discount: "30% Off",
-      enrollments: 200,
-      image: "https://bemadrid.com/wp-content/uploads/2022/05/online-courses.jpg" // Placeholder image URL
+      _id: "66cde34f89c32f07e4f99af4",
+      title: "React for Beginners",
+      subtitle: "Learn the fundamentals of React and build modern web applications.",
+      price: 100,
+      discountedPrice: 80,
+      isFree: false,
+      imageUrl: 'https://example.com/course-image-3.jpg',
+      freeCourses: [
+        { title: "JavaScript Basics", _id: "66cde34f89c32f07e4f99af5" },
+        { title: "Building Components in React", _id: "66cde34f89c32f07e4f99af6" }
+      ]
     },
     {
-      title: "UI/UX Design Basics",
-      price: "$79.99",
-      discount: "25% Off",
-      enrollments: 180,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRBHLQ2yxPflmVoCxdcBjKFnZ3HuE-Xr7bY_jxqVrg1oX5gY0muNWlxR39-ravgSPgQ0k&usqp=CAU" // Placeholder image URL
+      _id: "66cde34f89c32f07e4f99af7",
+      title: "Node.js Essentials",
+      subtitle: "Master backend development with Node.js.",
+      price: 180,
+      discountedPrice: 140,
+      isFree: false,
+      imageUrl: 'https://example.com/course-image-4.jpg',
+      freeCourses: [
+        { title: "Introduction to Node.js", _id: "66cde34f89c32f07e4f99af8" },
+        { title: "Express.js Basics", _id: "66cde34f89c32f07e4f99af9" }
+      ]
     },
     {
-      title: "Data Structures and Algorithms",
-      price: "$129.99",
-      discount: "10% Off",
-      enrollments: 90,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH4MQUqk_ApEw5QY7wasdZw-JIt0CWhuYWR2k_-1eLa7xhUju5yaOL_NMHp8pryb8LEYA&usqp=CAU" // Placeholder image URL
-    },
-    {
-      title: "Machine Learning 101",
-      price: "$199.99",
-      discount: "20% Off",
-      enrollments: 160,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH4MQUqk_ApEw5QY7wasdZw-JIt0CWhuYWR2k_-1eLa7xhUju5yaOL_NMHp8pryb8LEYA&usqp=CAU" // Placeholder image URL
-    },
-    {
-      title: "Database Management Systems",
-      price: "$89.99",
-      discount: "5% Off",
-      enrollments: 110,
-      image: "https://via.placeholder.com/300x200" // Placeholder image URL
-    },
-    {
-      title: "Introduction to Python",
-      price: "$119.99",
-      discount: "18% Off",
-      enrollments: 140,
-      image: "https://via.placeholder.com/300x200" // Placeholder image URL
-    },
-    {
+      _id: "66cde34f89c32f07e4f99afa",
       title: "Full Stack Development",
-      price: "$349.99",
-      discount: "25% Off",
-      enrollments: 220,
-      image: "https://via.placeholder.com/300x200" // Placeholder image URL
+      subtitle: "Become a full stack web developer.",
+      price: 250,
+      discountedPrice: 200,
+      isFree: false,
+      imageUrl: 'https://example.com/course-image-5.jpg',
+      freeCourses: [
+        { title: "HTML & CSS Basics", _id: "66cde34f89c32f07e4f99afb" },
+        { title: "JavaScript & React", _id: "66cde34f89c32f07e4f99afc" }
+      ]
     },
     {
-      title: "Cloud Computing Fundamentals",
-      price: "$159.99",
-      discount: "22% Off",
-      enrollments: 130,
-      image: "https://via.placeholder.com/300x200" // Placeholder image URL
+      _id: "66cde34f89c32f07e4f99afd",
+      title: "Python for Data Science",
+      subtitle: "Learn Python programming and apply it to data science.",
+      price: 220,
+      discountedPrice: 180,
+      isFree: false,
+      imageUrl: 'https://example.com/course-image-6.jpg',
+      freeCourses: [
+        { title: "Python Basics", _id: "66cde34f89c32f07e4f99afe" },
+        { title: "Data Analysis with Pandas", _id: "66cde34f89c32f07e4f99aff" }
+      ]
+    },
+    {
+      _id: "66cde34f89c32f07e4f99b00",
+      title: "Machine Learning A-Z",
+      subtitle: "Master machine learning with Python.",
+      price: 300,
+      discountedPrice: 250,
+      isFree: false,
+      imageUrl: 'https://example.com/course-image-7.jpg',
+      freeCourses: [
+        { title: "Introduction to Machine Learning", _id: "66cde34f89c32f07e4f99b01" },
+        { title: "Building ML Models", _id: "66cde34f89c32f07e4f99b02" }
+      ]
     }
   ];
 
   return (
-    <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
-      <Box sx={{ width: '100%', maxWidth: 1200 }}>
-        <Typography variant="h4" gutterBottom align="center">
-          Courses
-        </Typography>
-        <Grid container spacing={2} justifyContent="center">
-          {courses.map((course, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card
+    <Box sx={{ padding: 5, backgroundColor: "#f7f9fc", minHeight: "100vh" }}>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#2c3e50', marginBottom: 5, textAlign: 'center' }}>
+        Explore Our Courses
+      </Typography>
+      <Grid container spacing={5}>
+        {courses.map((course) => (
+          <Grid item xs={12} sm={6} md={4} key={course._id}>
+            <Card sx={{ borderRadius: 3, boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.1)', overflow: 'hidden', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.02)' } }}>
+              <Avatar
+                src={course.imageUrl}
+                variant="rounded"
                 sx={{
-                  maxWidth: 345,
-                  margin: 2,
-                  transition: "transform 0.3s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.05)"
-                  }
+                  width: '100%',
+                  height: 200,
+                  borderRadius: 0,
+                  backgroundColor: '#ecf0f1',
                 }}
-              >
-                {/* Image Section */}
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={course.image}
-                  alt={`${course.title} image`}
-                />
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {course.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>Price:</strong> <span style={{ color: "#1976d2", fontWeight: "bold" }}>{course.price}</span>
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>Discount:</strong> <span style={{ color: "#d32f2f", fontWeight: "bold" }}>{course.discount}</span>
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>Enrollments:</strong> {course.enrollments}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small" color="primary">
-                    Enroll Now
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+              />
+              <CardContent sx={{ padding: 3 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#2c3e50', marginBottom: 1 }}>
+                  {course.title}
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#7f8c8d', marginBottom: 3 }}>
+                  {course.subtitle}
+                </Typography>
+                {course.freeCourses.length > 0 && (
+                  <Box sx={{ marginBottom: 2 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#27ae60' }}>
+                      Free Courses Included:
+                    </Typography>
+                    <Grid container spacing={1} sx={{ marginTop: 1 }}>
+                      {course.freeCourses.map((freeCourse) => (
+                        <Grid item xs={6} key={freeCourse._id}>
+                          <Chip label={freeCourse.title} size="small" sx={{ backgroundColor: '#ecf0f1', color: '#34495e', fontWeight: '500' }} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                )}
+                <Button
+                  variant="contained"
+                  sx={{
+                    width: '100%',
+                    marginTop: 2,
+                    padding: '10px',
+                    backgroundColor: '#2980b9',
+                    color: '#fff',
+                    borderRadius: 25,
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    '&:hover': { backgroundColor: '#1abc9c' },
+                  }}
+                >
+                  {course.isFree ? 'Enroll for Free' : `Buy Now - $${course.discountedPrice}`}
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 };
 
-export default Courses;
+export default CourseList;
